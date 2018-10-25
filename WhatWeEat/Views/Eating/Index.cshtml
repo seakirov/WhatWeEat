@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WhatWeEat.Models.Eating>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mainform">
+    <div class="panel panel-default">
+
+        @if (ViewBag.isNewUser)
+        {
+            <div class="panel-body">
+                @ViewBag.curUser.Name, мы рады приветствовать вас в нашем сообществе!Вы только что съели @ViewBag.foodName! За сегодня @ViewBag.foodName было съедено @ViewBag.cntFoodToday раз!
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @ViewBag.curUser.Name, с возвращением! Вы только что съели  @ViewBag.foodName! Всего вы съели @ViewBag.foodName @ViewBag.cntFoodUser раз! За сегодня @ViewBag.foodName было съедено @ViewBag.cntFoodToday раз!
+            </div>
+        }
+
+        <div class="panel-footer">
+            @Html.ActionLink("Съесть ещё что-нибудь", "Create", new { }, htmlAttributes: new { type = "button", @class = "btn btn-primary" })
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Также люди едят:</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled">
+                @foreach (var item in Model)
+                {
+                    <li style="text-align: center;">
+                        <em>@Html.DisplayFor(modelItem => item.DateTimeStamp) @Html.DisplayFor(modelItem => item.User.Name) (@Html.DisplayFor(modelItem => item.User.Email)) съел @Html.DisplayFor(modelItem => item.Food.Name)</em>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

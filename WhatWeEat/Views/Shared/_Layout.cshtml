@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Что мы едим</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="container body-content">
+        <div class="jumbotron">
+            <img src="~/Content/img/logo.png" class="img-fluid" />
+        </div>
+        <br />
+        @RenderBody()
+        <br />
+        <footer>
+            <hr />
+            <p>&copy; @DateTime.Now.Year - Ed Smirnov</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

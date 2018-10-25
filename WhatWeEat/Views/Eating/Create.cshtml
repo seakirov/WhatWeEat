@@ -1,0 +1,81 @@
+﻿@model WhatWeEat.Models.Eating
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mainform">
+    @using (Html.BeginForm("Create", "Eating", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.User.Name, new { @class = "control-label" })
+            @Html.TextBoxFor(model => model.User.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.User.Name, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.User.Email, new { @class = "control-label" })
+            @Html.TextBoxFor(model => model.User.Email, new { type = "email", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Блюдо", new { @class = "control-label" })
+
+                <div class="input-group">
+                    @Html.DropDownList("FoodId", null, "Выберите блюдо", new { @class = "form-control custom-select" })
+                    <div class="input-group-btn">
+                        @Html.ActionLink("Добавить новое блюдо", "Create", "Food", new { }, htmlAttributes: new { type = "button", @class = "btn btn-primary", @id= "modalLink" })
+                    </div>
+                </div>
+
+            @Html.ValidationMessageFor(model => model.FoodId, "", new { @class = "text-danger" })
+        </div>
+
+        <button type="submit" class="btn btn-success">Рассказать о том, что я ем</button>
+    }
+    <div class="dialog"></div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $('#modalLink').click(function (e) {
+                e.preventDefault();
+                $('.dialog').load(this.href, function () {
+                    var form = $('.dialog')
+                        .removeData("validator")
+                        .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+                    $(this).dialog({
+                        title: 'Добавить новое блюдо',
+                        modal: true,
+                    });
+                    bindForm(this);
+                });
+                return false;
+            });
+        });
+
+        function bindForm(dialog) {
+            $('.dialog', dialog).submit(function () {
+                $('.dialog').valid();
+                $.ajax({
+                    url: "@Url.Action("Create", "Eating")",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        $('.dialog').html(result);
+                    }
+                });
+                return false;
+            });
+        }
+    </script>
+}
